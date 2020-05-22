@@ -133,24 +133,5 @@ const task = () => {
 }
 for (;;) {
   sleep(interval)
-  const btnCollection = text('去完成').find()
-  //任务完成 跳出循环
-  if (btnCollection.length == 1 && btnIndex == 1) {
-    toast('任务完成')
-    device.vibrate(2000)
-    break
-  } else if (btnCollection.length == 2 && btnIndex == 2) {
-    toast('任务完成')
-    device.vibrate(2000)
-    break
-  } else if (
-    !btnCollection.length &&
-    !btnIndex &&
-    text('做任务领金币').exists()
-  ) {
-    toast('任务完成')
-    device.vibrate(2000)
-    break
-  }
   task()
 }
