@@ -12,14 +12,14 @@ if (className('android.view.View').textContains('邀请好友助力').exists()) 
 const task = () => {
   //跳出组队任务
   if (textContains('战队红包').exists() && textContains('预计分得').exists()) {
-    if (id('com.jingdong.app.mall:id/fe').exists()) {
-      id('com.jingdong.app.mall:id/fe').findOne().click()
-    } else if (id('com.jingdong.app.mall:id/fd').exists()) {
-      id('com.jingdong.app.mall:id/fd').findOne().click()
-    } else if (id('fe').exists()) {
-      id('fe').findOne().click()
-    } else if (id('fd').exists()) {
-      id('fd').findOne().click()
+    if (idContains('com.jingdong.app.mall:id/fe').exists()) {
+      idContains('com.jingdong.app.mall:id/fe').findOne().click()
+    } else if (idContains('com.jingdong.app.mall:id/fd').exists()) {
+      idContains('com.jingdong.app.mall:id/fd').findOne().click()
+    } else if (idContains('fe').exists()) {
+      idContains('fe').findOne().click()
+    } else if (idContains('fd').exists()) {
+      idContains('fd').findOne().click()
     } else {
       back()
     }
@@ -27,10 +27,10 @@ const task = () => {
     btnIndex = 2
   } else if (textContains('恭喜完成，获得').exists()) {
     //8s任务
-    if (id('com.jingdong.app.mall:id/fe').exists()) {
-      id('com.jingdong.app.mall:id/fe').findOne().click()
-    } else if (id('com.jingdong.app.mall:id/fd').exists()) {
-      id('com.jingdong.app.mall:id/fd').findOne().click()
+    if (idContains('com.jingdong.app.mall:id/fe').exists()) {
+      idContains('com.jingdong.app.mall:id/fe').findOne().click()
+    } else if (idContains('com.jingdong.app.mall:id/fd').exists()) {
+      idContains('com.jingdong.app.mall:id/fd').findOne().click()
     } else {
       back()
     }
@@ -42,14 +42,14 @@ const task = () => {
     if (commodityViewCount >= 6) {
       //任务完成
       commodityViewCount = 0
-      if (id('com.jingdong.app.mall:id/fe').exists()) {
-        id('com.jingdong.app.mall:id/fe').findOne().click()
-      } else if (id('com.jingdong.app.mall:id/fd').exists()) {
-        id('com.jingdong.app.mall:id/fd').findOne().click()
-      } else if (id('fe').exists()) {
-        id('fe').findOne().click()
-      } else if (id('fd').exists()) {
-        id('fd').findOne().click()
+      if (idContains('com.jingdong.app.mall:id/fe').exists()) {
+        idContains('com.jingdong.app.mall:id/fe').findOne().click()
+      } else if (idContains('com.jingdong.app.mall:id/fd').exists()) {
+        idContains('com.jingdong.app.mall:id/fd').findOne().click()
+      } else if (idContains('fe').exists()) {
+        idContains('fe').findOne().click()
+      } else if (idContains('fd').exists()) {
+        idContains('fd').findOne().click()
       } else {
         back()
       }
@@ -68,14 +68,14 @@ const task = () => {
     if (cartCount >= 6) {
       //任务完成
       cartCount = 0
-      if (id('com.jingdong.app.mall:id/fe').exists()) {
-        id('com.jingdong.app.mall:id/fe').findOne().click()
-      } else if (id('com.jingdong.app.mall:id/fd').exists()) {
-        id('com.jingdong.app.mall:id/fd').findOne().click()
-      } else if (id('fe').exists()) {
-        id('fe').findOne().click()
-      } else if (id('fd').exists()) {
-        id('fd').findOne().click()
+      if (idContains('com.jingdong.app.mall:id/fe').exists()) {
+        idContains('com.jingdong.app.mall:id/fe').findOne().click()
+      } else if (idContains('com.jingdong.app.mall:id/fd').exists()) {
+        idContains('com.jingdong.app.mall:id/fd').findOne().click()
+      } else if (idContains('fe').exists()) {
+        idContains('fe').findOne().click()
+      } else if (idContains('fd').exists()) {
+        idContains('fd').findOne().click()
       } else {
         back()
       }
@@ -93,37 +93,39 @@ const task = () => {
   } else if (text('购物车').exists() && text('店铺').exists()) {
     //商品页
     sleep(4000)
-    if (id('com.jd.lib.productdetail:id/fe').exists()) {
-      id('com.jd.lib.productdetail:id/fe').findOne().click()
-    } else if (id('com.jd.lib.productdetail:id/fd').exists()) {
-      id('com.jd.lib.productdetail:id/fd').findOne().click()
-    } else if (id('fe').exists()) {
-      id('fe').findOne().click()
-    } else if (id('fd').exists()) {
-      id('fd').findOne().click()
+    if (idContains('com.jd.lib.productdetail:id/fe').exists()) {
+      idContains('com.jd.lib.productdetail:id/fe').findOne().click()
+    } else if (idContains('com.jd.lib.productdetail:id/fd').exists()) {
+      idContains('com.jd.lib.productdetail:id/fd').findOne().click()
+    } else if (idContains('fe').exists()) {
+      idContains('fe').findOne().click()
+    } else if (idContains('fd').exists()) {
+      idContains('fd').findOne().click()
     } else {
       back()
     }
   } else {
     //其他的一些浏览任务
     sleep(sleepTime)
-    toast(id('pop-start-img').exists())
-    if (id('pop-start-img').exists()) {
+    if (idContains('ui-bgm').exists() && idContains('pop-start-btn').exists()) {
       //游戏
-      //id('ui-back').findOne().click()
+      sleep(2000)
+      idContains('pop-start-btn').findOne().click()
+      idContains('pop-fail2-btn').waitFor()
+      idContains('pop-fail2-btn').findOne().click()
     } else if (className('android.widget.Button').desc('返回').exists()) {
       //领京豆页面等
       className('android.widget.Button').desc('返回').findOne().click()
     } else if (className('android.view.ViewGroup').desc('返回按钮').exists()) {
       className('android.view.ViewGroup').desc('返回按钮').findOne().click()
-    } else if (id('com.jingdong.app.mall:id/fe').exists()) {
-      id('com.jingdong.app.mall:id/fe').findOne().click()
-    } else if (id('com.jingdong.app.mall:id/fd').exists()) {
-      id('com.jingdong.app.mall:id/fd').findOne().click()
-    } else if (id('fe').exists()) {
-      id('fe').findOne().click()
-    } else if (id('fd').exists()) {
-      id('fd').findOne().click()
+    } else if (idContains('com.jingdong.app.mall:id/fe').exists()) {
+      idContains('com.jingdong.app.mall:id/fe').findOne().click()
+    } else if (idContains('com.jingdong.app.mall:id/fd').exists()) {
+      idContains('com.jingdong.app.mall:id/fd').findOne().click()
+    } else if (idContains('fe').exists()) {
+      idContains('fe').findOne().click()
+    } else if (idContains('fd').exists()) {
+      idContains('fd').findOne().click()
     } else {
       back()
     }
@@ -144,7 +146,7 @@ for (;;) {
   } else if (
     !btnCollection.length &&
     !btnIndex &&
-    id('homeSceneBtnTask').exists()
+    text('做任务领金币').exists()
   ) {
     toast('任务完成')
     device.vibrate(2000)
