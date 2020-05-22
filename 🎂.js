@@ -1,17 +1,32 @@
 toast('开始执行')
 
 let btnIndex = 0 //跳过好友助力
-let commodityViewCount = 0 //浏览商品浏览计数
-let cartCount = 0 //架构计数
-const interval = 4000 //任务执行间隔，手机性能差的弄长一点
-const sleepTime = 20000 //有些场景加载很慢，建议设置长一些
+let commodityViewCount = 0 //浏览商品计数
+let cartCount = 0 //加购计数
+const interval = 4000 //任务执行间隔，手机性能差的设置大一些
+const sleepTime = 20000 //有些场景加载得很慢，建议设置大一些
 if (className('android.view.View').textContains('邀请好友助力').exists()) {
   btnIndex = 1
 }
 
 const task = () => {
-  //8s任务
-  if (textContains('恭喜完成，获得').exists()) {
+  //跳出组队任务
+  if (textContains('战队红包').exists() && textContains('预计分得').exists()) {
+    if (id('com.jingdong.app.mall:id/fe').exists()) {
+      id('com.jingdong.app.mall:id/fe').findOne().click()
+    } else if (id('com.jingdong.app.mall:id/fd').exists()) {
+      id('com.jingdong.app.mall:id/fd').findOne().click()
+    } else if (id('fe').exists()) {
+      id('fe').findOne().click()
+    } else if (id('fd').exists()) {
+      id('fd').findOne().click()
+    } else {
+      back()
+    }
+    sleep(4000)
+    btnIndex = 2
+  } else if (textContains('恭喜完成，获得').exists()) {
+    //8s任务
     if (id('com.jingdong.app.mall:id/fe').exists()) {
       id('com.jingdong.app.mall:id/fe').findOne().click()
     } else if (id('com.jingdong.app.mall:id/fd').exists()) {
@@ -92,7 +107,16 @@ const task = () => {
   } else {
     //其他的一些浏览任务
     sleep(sleepTime)
-    if (id('com.jingdong.app.mall:id/fe').exists()) {
+    toast(id('pop-start-img').exists())
+    if (id('pop-start-img').exists()) {
+      //游戏
+      //id('ui-back').findOne().click()
+    } else if (className('android.widget.Button').desc('返回').exists()) {
+      //领京豆页面等
+      className('android.widget.Button').desc('返回').findOne().click()
+    } else if (className('android.view.ViewGroup').desc('返回按钮').exists()) {
+      className('android.view.ViewGroup').desc('返回按钮').findOne().click()
+    } else if (id('com.jingdong.app.mall:id/fe').exists()) {
       id('com.jingdong.app.mall:id/fe').findOne().click()
     } else if (id('com.jingdong.app.mall:id/fd').exists()) {
       id('com.jingdong.app.mall:id/fd').findOne().click()
@@ -103,13 +127,6 @@ const task = () => {
     } else {
       back()
     }
-    if (className('android.widget.Button').desc('返回').exists()) {
-      //领京豆页面等
-      className('android.widget.Button').desc('返回').findOne().click()
-    }
-    if (className('android.view.ViewGroup').desc('返回按钮').exists()) {
-      className('android.view.ViewGroup').desc('返回按钮').findOne().click()
-    }
   }
 }
 for (;;) {
@@ -118,9 +135,19 @@ for (;;) {
   //任务完成 跳出循环
   if (btnCollection.length == 1 && btnIndex == 1) {
     toast('任务完成')
+    device.vibrate(2000)
     break
-  } else if (!btnCollection.length && !btnIndex) {
+  } else if (btnCollection.length == 2 && btnIndex == 2) {
     toast('任务完成')
+    device.vibrate(2000)
+    break
+  } else if (
+    !btnCollection.length &&
+    !btnIndex &&
+    id('homeSceneBtnTask').exists()
+  ) {
+    toast('任务完成')
+    device.vibrate(2000)
     break
   }
   task()
