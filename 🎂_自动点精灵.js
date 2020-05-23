@@ -5,6 +5,7 @@ let commodityViewCount = 0 //浏览商品计数
 let cartCount = 0 //加购计数
 const interval = 4000 //任务执行间隔，手机性能差的设置大一些
 const sleepTime = 0 //有些场景加载得很慢，建议设置大一些
+const clickInterval = 2000 //精灵点击间隔
 const version = device.release //安卓版本
 let breakTask = true //是否中止任务
 
@@ -196,7 +197,7 @@ const clickCoinElf = () => {
   }
   setTimeout(() => {
     clickCoinElf()
-  }, 2000)
+  }, clickInterval)
 }
 
 const getCoins = () => {
