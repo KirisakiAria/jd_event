@@ -5,13 +5,26 @@ let commodityViewCount = 0 //浏览商品计数
 let cartCount = 0 //加购计数
 const interval = 4000 //任务执行间隔，手机性能差的设置大一些
 const sleepTime = 20000 //有些场景加载得很慢，建议设置大一些
-if (className('android.view.View').textContains('邀请好友助力').exists()) {
-  btnIndex = 1
+
+const judge = () => {
+  if (className('android.view.View').textContains('邀请好友助力').exists()) {
+    btnIndex = 1
+  }
 }
 
 const task = () => {
   //跳出组队任务
-  if (textContains('战队红包').exists() && textContains('预计分得').exists()) {
+  if (className('android.view.View').text('继续领红包').depth(12).exists()) {
+    //任务列表页返回确认对话框
+    className('android.view.View')
+      .text('继续领红包')
+      .depth(12)
+      .findOne()
+      .click()
+  } else if (
+    textContains('战队红包').exists() &&
+    textContains('预计分得').exists()
+  ) {
     if (idContains('com.jingdong.app.mall:id/fe').exists()) {
       idContains('com.jingdong.app.mall:id/fe').findOne().click()
     } else if (idContains('com.jingdong.app.mall:id/fd').exists()) {
@@ -107,15 +120,25 @@ const task = () => {
   } else {
     //其他的一些浏览任务
     sleep(sleepTime)
-    if (idContains('ui-bgm').exists() && idContains('pop-start-btn').exists()) {
+    if (idContains('abb').exists() && textContains('忍痛离开').exists()) {
+      //忍痛离开
+      idContains('abb').findOne().click()
+    } else if (
+      idContains('ui-bgm').exists() &&
+      idContains('pop-start-btn').exists()
+    ) {
       //游戏
       sleep(2000)
       idContains('pop-start-btn').findOne().click()
       idContains('pop-fail2-btn').waitFor()
       idContains('pop-fail2-btn').findOne().click()
-    } else if (className('android.widget.Button').desc('返回').exists()) {
-      //领京豆页面等
-      className('android.widget.Button').desc('返回').findOne().click()
+    } else if (textContains('东东萌宠').exists()) {
+      // 萌宠
+      back()
+    }
+    if (className('android.widget.TextView').textContains('领京豆').exists()) {
+      // 领京豆
+      back()
     } else if (className('android.view.ViewGroup').desc('返回按钮').exists()) {
       className('android.view.ViewGroup').desc('返回按钮').findOne().click()
     } else if (idContains('com.jingdong.app.mall:id/fe').exists()) {
@@ -133,5 +156,6 @@ const task = () => {
 }
 for (;;) {
   sleep(interval)
+  judge()
   task()
 }
