@@ -156,6 +156,8 @@ const task = () => {
 }
 for (;;) {
   sleep(interval)
-  judge()
+  if (btnIndex != 2) {
+    judge()
+  }
   task()
 }
