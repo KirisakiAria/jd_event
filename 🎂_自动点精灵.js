@@ -4,8 +4,9 @@ let btnIndex = 0 //跳过一些无法完成的任务
 let commodityViewCount = 0 //浏览商品计数
 let cartCount = 0 //加购计数
 const interval = 4000 //任务执行间隔，手机性能差的设置大一些
-const sleepTime = 20000 //有些场景加载得很慢，建议设置大一些
+const sleepTime = 0 //有些场景加载得很慢，建议设置大一些
 const version = device.release //安卓版本
+let breakTask = true //是否中止任务
 
 const judge = () => {
   if (className('android.view.View').textContains('邀请好友助力').exists()) {
@@ -17,6 +18,9 @@ const judge = () => {
 }
 
 const task = () => {
+  if (breakTask) {
+    return
+  }
   if (
     className('android.widget.TextView').text('扫啊扫').exists() &&
     className('android.widget.TextView').text('消息').exists()
@@ -185,10 +189,56 @@ const task = () => {
     }
   }
 }
-for (;;) {
-  sleep(interval)
-  if (btnIndex != 2) {
-    judge()
+
+const clickCoinElf = () => {
+  if (idContains('goldElfin').exists()) {
+    idContains('goldElfin').findOne().click()
   }
-  task()
+  setTimeout(() => {
+    clickCoinElf()
+  }, 2000)
 }
+
+const getCoins = () => {
+  breakTask = true
+  if (
+    className('android.widget.Image')
+      .textContains('x6YonE079h84lBpxnX4CVJaqei7TKx8AAAAASUVORK5CYII=')
+      .exists()
+  ) {
+    className('android.widget.Image')
+      .textContains('x6YonE079h84lBpxnX4CVJaqei7TKx8AAAAASUVORK5CYII=')
+      .findOne()
+      .click()
+  }
+  clickCoinElf()
+}
+
+const taskQueue = () => {
+  breakTask = false
+  for (;;) {
+    if (breakTask) {
+      break
+    }
+    sleep(interval)
+    if (btnIndex != 2) {
+      judge()
+    }
+    task()
+  }
+}
+
+// prettier-ignore
+const floatyWin = floaty.window(
+  <horizontal>
+    <button id="coin" text="点击金币精灵" />
+  </horizontal>
+)
+
+floatyWin.coin.click(() => {
+  getCoins()
+})
+
+taskQueue()
+
+setInterval(() => {}, 1000)
