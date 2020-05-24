@@ -174,6 +174,18 @@ const task = () => {
           .findOne()
           .bounds()
         click(w3.centerX(), w3.centerY())
+        sleep(3000)
+        if (
+          className('android.widget.TextView').textContains('知道了').exists()
+        ) {
+          className('android.widget.TextView')
+            .textContains('知道了')
+            .parent()
+            .findOne()
+            .click()
+          sleep(3000)
+          click(w3.centerX(), w3.centerY())
+        }
       } else {
         back()
       }
