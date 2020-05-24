@@ -5,9 +5,9 @@ let commodityViewCount = 0 //浏览商品计数
 let cartCount = 0 //加购计数
 const interval = 4000 //任务执行间隔，手机性能差的设置大一些
 const sleepTime = 20000 //有些场景加载得很慢，建议设置大一些
-const clickInterval = 2000 //精灵点击间隔
 const version = device.release //安卓版本
 let breakTask = true //是否中止任务
+const clickInterval = 2000 //精灵点击间隔
 
 const judge = () => {
   if (className('android.view.View').textContains('邀请好友助力').exists()) {
@@ -154,6 +154,9 @@ const task = () => {
       idContains('pop-start-btn').findOne().click()
       idContains('pop-fail2-btn').waitFor()
       idContains('pop-fail2-btn').findOne().click()
+    } else if (textContains('玩一玩').exists()) {
+      // 玩一玩
+      idContains('com.jingdong.app.mall:id/fe').findOne().click()
     } else if (textContains('东东萌宠').exists()) {
       // 萌宠
       if (parseInt(version.substring(0, 1)) >= 7) {
@@ -165,8 +168,9 @@ const task = () => {
       } else {
         back()
       }
-    }
-    if (className('android.widget.TextView').textContains('领京豆').exists()) {
+    } else if (
+      className('android.widget.TextView').textContains('领京豆').exists()
+    ) {
       // 领京豆
       if (parseInt(version.substring(0, 1)) >= 7) {
         const w3 = className('android.widget.Button')

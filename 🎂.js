@@ -149,6 +149,9 @@ const task = () => {
       idContains('pop-start-btn').findOne().click()
       idContains('pop-fail2-btn').waitFor()
       idContains('pop-fail2-btn').findOne().click()
+    } else if (textContains('玩一玩').exists()) {
+      // 玩一玩
+      idContains('com.jingdong.app.mall:id/fe').findOne().click()
     } else if (textContains('东东萌宠').exists()) {
       // 萌宠
       if (parseInt(version.substring(0, 1)) >= 7) {
@@ -160,8 +163,9 @@ const task = () => {
       } else {
         back()
       }
-    }
-    if (className('android.widget.TextView').textContains('领京豆').exists()) {
+    } else if (
+      className('android.widget.TextView').textContains('领京豆').exists()
+    ) {
       // 领京豆
       if (parseInt(version.substring(0, 1)) >= 7) {
         const w3 = className('android.widget.Button')
