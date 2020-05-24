@@ -152,12 +152,11 @@ const task = () => {
     } else if (textContains('东东萌宠').exists()) {
       // 萌宠
       if (parseInt(version.substring(0, 1)) >= 7) {
-        toast()
         const w2 = className('android.view.ViewGroup')
           .desc('返回按钮')
           .findOne()
-          .findOne()
-        click(w2.bounds().centerX(), w2.bounds().centerY())
+          .bounds()
+        click(w2.centerX(), w2.centerY())
       } else {
         back()
       }
@@ -165,8 +164,11 @@ const task = () => {
     if (className('android.widget.TextView').textContains('领京豆').exists()) {
       // 领京豆
       if (parseInt(version.substring(0, 1)) >= 7) {
-        const w3 = className('android.widget.Button').desc('返回').findOne()
-        click(w3.bounds().centerX(), w3.bounds().centerY())
+        const w3 = className('android.widget.Button')
+          .desc('返回')
+          .findOne()
+          .bounds()
+        click(w3.centerX(), w3.centerY())
       } else {
         back()
       }

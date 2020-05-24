@@ -4,7 +4,7 @@ let btnIndex = 0 //跳过一些无法完成的任务
 let commodityViewCount = 0 //浏览商品计数
 let cartCount = 0 //加购计数
 const interval = 4000 //任务执行间隔，手机性能差的设置大一些
-const sleepTime = 20000 //有些场景加载得很慢，建议设置大一些
+const sleepTime = 0 //有些场景加载得很慢，建议设置大一些
 const clickInterval = 2000 //精灵点击间隔
 const version = device.release //安卓版本
 let breakTask = true //是否中止任务
@@ -157,12 +157,11 @@ const task = () => {
     } else if (textContains('东东萌宠').exists()) {
       // 萌宠
       if (parseInt(version.substring(0, 1)) >= 7) {
-        toast()
         const w2 = className('android.view.ViewGroup')
           .desc('返回按钮')
           .findOne()
-          .findOne()
-        click(w2.bounds().centerX(), w2.bounds().centerY())
+          .bounds()
+        click(w2.centerX(), w2.centerY())
       } else {
         back()
       }
@@ -170,8 +169,11 @@ const task = () => {
     if (className('android.widget.TextView').textContains('领京豆').exists()) {
       // 领京豆
       if (parseInt(version.substring(0, 1)) >= 7) {
-        const w3 = className('android.widget.Button').desc('返回').findOne()
-        click(w3.bounds().centerX(), w3.bounds().centerY())
+        const w3 = className('android.widget.Button')
+          .desc('返回')
+          .findOne()
+          .bounds()
+        click(w3.centerX(), w3.centerY())
       } else {
         back()
       }
@@ -235,6 +237,8 @@ const floatyWin = floaty.window(
     <button id="coin" text="点击金币精灵" />
   </horizontal>
 )
+
+floatyWin.setPosition(300, 0)
 
 floatyWin.coin.click(() => {
   getCoins()
