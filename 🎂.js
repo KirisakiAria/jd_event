@@ -194,6 +194,8 @@ const task = () => {
       idContains('com.jingdong.app.mall:id/fe').findOne().click()
     } else if (idContains('com.jingdong.app.mall:id/fd').exists()) {
       idContains('com.jingdong.app.mall:id/fd').findOne().click()
+    } else if (idContains('com.jd.lib.jshop:id/fd').exists()) {
+      idContains('com.jd.lib.jshop:id/fd').findOne().click()
     } else if (idContains('fe').exists()) {
       idContains('fe').findOne().click()
     } else if (idContains('fd').exists()) {
