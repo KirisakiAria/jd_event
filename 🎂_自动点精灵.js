@@ -69,6 +69,8 @@ const task = () => {
       idContains('com.jingdong.app.mall:id/fd').findOne().click()
     } else if (idContains('com.jd.lib.jshop:id/fd').exists()) {
       idContains('com.jd.lib.jshop:id/fd').findOne().click()
+    } else if (idContains('com.jd.lib.jshop:id/fe').exists()) {
+      idContains('com.jd.lib.jshop:id/fe').findOne().click()
     } else if (idContains('fe').exists()) {
       idContains('fe').findOne().click()
     } else if (idContains('fd').exists()) {
@@ -185,16 +187,8 @@ const task = () => {
           .bounds()
         click(w3.centerX(), w3.centerY())
         sleep(3000)
-        if (
-          className('android.widget.TextView').textContains('知道了').exists()
-        ) {
-          className('android.widget.TextView')
-            .textContains('知道了')
-            .parent()
-            .findOne()
-            .click()
-          sleep(3000)
-          click(w3.centerX(), w3.centerY())
+        if (className('android.widget.TextView').text('知道了').exists()) {
+          className('android.view.ViewGroup').depth(3).findOne().click()
         }
       } else {
         back()
@@ -207,6 +201,8 @@ const task = () => {
       idContains('com.jingdong.app.mall:id/fd').findOne().click()
     } else if (idContains('com.jd.lib.jshop:id/fd').exists()) {
       idContains('com.jd.lib.jshop:id/fd').findOne().click()
+    } else if (idContains('com.jd.lib.jshop:id/fe').exists()) {
+      idContains('com.jd.lib.jshop:id/fe').findOne().click()
     } else if (idContains('fe').exists()) {
       idContains('fe').findOne().click()
     } else if (idContains('fd').exists()) {
