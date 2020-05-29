@@ -2,7 +2,6 @@ toast('开始执行')
 
 let btnIndex = 0 //跳过一些无法完成的任务
 let commodityViewCount = 0 //浏览商品计数
-let cartCount = 0 //加购计数
 const interval = 4000 //任务执行间隔，手机性能差的设置大一些
 const sleepTime = 20000 //有些场景加载得很慢，建议设置大一些
 const version = device.release //安卓版本
@@ -100,35 +99,28 @@ const task = () => {
       .parent()
       .child(1)
       .child(commodityViewCount)
+      .child(2)
       .click()
     commodityViewCount++
   } else if (text('当前页点击加购以下5个商品').exists()) {
     //加购
-    if (cartCount >= 6) {
-      //任务完成
-      cartCount = 0
-      if (idContains('com.jingdong.app.mall:id/fe').exists()) {
-        idContains('com.jingdong.app.mall:id/fe').findOne().click()
-      } else if (idContains('com.jingdong.app.mall:id/fd').exists()) {
-        idContains('com.jingdong.app.mall:id/fd').findOne().click()
-      } else if (idContains('fe').exists()) {
-        idContains('fe').findOne().click()
-      } else if (idContains('fd').exists()) {
-        idContains('fd').findOne().click()
-      } else {
-        back()
-      }
+    const collection = idContains('cart_').find()
+    collection.slice(0, 5).forEach(e => {
+      sleep(2500)
+      e.click()
+    })
+    sleep(3000)
+    if (idContains('com.jingdong.app.mall:id/fe').exists()) {
+      idContains('com.jingdong.app.mall:id/fe').findOne().click()
+    } else if (idContains('com.jingdong.app.mall:id/fd').exists()) {
+      idContains('com.jingdong.app.mall:id/fd').findOne().click()
+    } else if (idContains('fe').exists()) {
+      idContains('fe').findOne().click()
+    } else if (idContains('fd').exists()) {
+      idContains('fd').findOne().click()
+    } else {
+      back()
     }
-    className('android.view.View')
-      .text('当前页点击加购以下5个商品')
-      .findOne()
-      .parent()
-      .parent()
-      .child(1)
-      .child(cartCount)
-      .child(2)
-      .click()
-    cartCount++
   } else if (text('购物车').exists() && text('店铺').exists()) {
     //商品页
     sleep(4000)
@@ -157,6 +149,11 @@ const task = () => {
       idContains('pop-start-btn').findOne().click()
       idContains('pop-fail2-btn').waitFor()
       idContains('pop-fail2-btn').findOne().click()
+    } else if (
+      className('android.widget.TextView').text('收取营养液').exists()
+    ) {
+      //种豆得豆
+      back()
     } else if (textContains('玩一玩').exists()) {
       // 玩一玩
       idContains('com.jingdong.app.mall:id/fe').findOne().click()
