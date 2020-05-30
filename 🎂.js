@@ -7,10 +7,12 @@ const sleepTime = 20000 //有些场景加载得很慢，建议设置大一些
 const version = device.release //安卓版本
 
 const judge = () => {
-  if (className('android.view.View').textContains('邀请好友助力').exists()) {
+  if (className('android.view.View').textContains('邀人助力得').exists()) {
     btnIndex = 1
   }
-  if (className('android.view.View').textContains('每邀1个好友可得').exists()) {
+  if (
+    className('android.view.View').textContains('邀请活动新人助力').exists()
+  ) {
     btnIndex = 1
   }
 }

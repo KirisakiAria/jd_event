@@ -9,10 +9,12 @@ let breakTask = true //是否中止任务
 const clickInterval = 2000 //精灵点击间隔
 
 const judge = () => {
-  if (className('android.view.View').textContains('邀请好友助力').exists()) {
+  if (className('android.view.View').textContains('邀人助力得').exists()) {
     btnIndex = 1
   }
-  if (className('android.view.View').textContains('每邀1个好友可得').exists()) {
+  if (
+    className('android.view.View').textContains('邀请活动新人助力').exists()
+  ) {
     btnIndex = 1
   }
 }
