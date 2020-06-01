@@ -149,7 +149,7 @@ const task = () => {
       //忍痛离开
       idContains('abb').findOne().click()
     } else if (
-      idContains('ui-bgm').exists() &&
+      idContains('ui-back').exists() &&
       idContains('pop-start-btn').exists()
     ) {
       //游戏
