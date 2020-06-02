@@ -51,6 +51,7 @@ const task = () => {
     textContains('战队红包').exists() &&
     textContains('预计分得').exists()
   ) {
+    btnIndex = 2
     if (idContains('com.jingdong.app.mall:id/fe').exists()) {
       idContains('com.jingdong.app.mall:id/fe').findOne().click()
     } else if (idContains('com.jingdong.app.mall:id/fd').exists()) {
@@ -60,8 +61,6 @@ const task = () => {
     } else if (idContains('fd').exists()) {
       idContains('fd').findOne().click()
     }
-    sleep(4000)
-    btnIndex = 2
   } else if (textContains('恭喜完成，获得').exists()) {
     //8s任务
     if (idContains('com.jingdong.app.mall:id/fe').exists()) {
