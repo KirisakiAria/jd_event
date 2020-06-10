@@ -24,8 +24,8 @@ const task = () => {
     return
   }
   if (
-    className('android.widget.TextView').text('扫啊扫').exists() &&
-    className('android.widget.TextView').text('消息').exists()
+    className('android.widget.TextView').textContains('扫啊扫').exists() &&
+    className('android.widget.TextView').textContains('消息').exists()
   ) {
     //从首页自动进入活动
     if (parseInt(version.substring(0, 1)) >= 7) {
@@ -39,11 +39,11 @@ const task = () => {
   }
   //跳出组队任务
   else if (
-    className('android.view.View').text('继续领红包').depth(12).exists()
+    className('android.view.View').textContains('继续领红包').depth(12).exists()
   ) {
     //任务列表页返回确认对话框
     className('android.view.View')
-      .text('继续领红包')
+      .textContains('继续领红包')
       .depth(12)
       .findOne()
       .click()
@@ -78,10 +78,10 @@ const task = () => {
     } else {
       back()
     }
-  } else if (text('去完成').exists()) {
+  } else if (textContains('去完成').exists()) {
     //任务页
     click('去完成', btnIndex)
-  } else if (text('浏览以下5个商品').exists()) {
+  } else if (textContains('浏览以下5个商品').exists()) {
     //商品浏览
     if (commodityViewCount >= 6) {
       //任务完成
@@ -99,7 +99,7 @@ const task = () => {
       }
     }
     className('android.view.View')
-      .text('浏览以下5个商品')
+      .textContains('浏览以下5个商品')
       .findOne()
       .parent()
       .parent()
@@ -108,7 +108,7 @@ const task = () => {
       .child(2)
       .click()
     commodityViewCount++
-  } else if (text('当前页点击加购以下5个商品').exists()) {
+  } else if (textContains('当前页点击加购以下5个商品').exists()) {
     //加购
     const collection = idContains('cart_').find()
     collection.slice(0, 5).forEach(e => {
@@ -127,7 +127,40 @@ const task = () => {
     } else {
       back()
     }
-  } else if (text('购物车').exists() && text('店铺').exists()) {
+  } else if (
+    textContains('恭喜获得').exists() &&
+    textContains('成功加入会员').exists()
+  ) {
+    const w10 = textContains('我知道了').findOne().parent().bounds()
+    click(w10.centerX(), w10.centerY())
+    sleep(5000)
+  } else if (
+    textContains('会员卡详情').exists() &&
+    textContains('领取成功').exists()
+  ) {
+    const w8 = className('android.widget.TextView')
+      .textContains('确定')
+      .findOne()
+      .parent()
+      .bounds()
+    click(w8.centerX(), w8.centerY())
+  } else if (textContains('暂不授权').exists()) {
+    const w6 = className('android.widget.TextView')
+      .textContains('确认授权并加入会员')
+      .findOne()
+      .parent()
+      .bounds()
+    click(w6.centerX(), w6.centerY())
+    sleep(5000)
+  } else if (textContains('确认授权即同意').exists()) {
+    const w4 = textContains('确认授权即同意')
+      .findOne()
+      .parent()
+      .child(2)
+      .bounds()
+    click(w4.centerX(), w4.centerY())
+    sleep(5000)
+  } else if (textContains('购物车').exists() && textContains('店铺').exists()) {
     //商品页
     sleep(4000)
     if (idContains('com.jd.lib.productdetail:id/fe').exists()) {
@@ -156,7 +189,7 @@ const task = () => {
       idContains('pop-fail2-btn').waitFor()
       idContains('pop-fail2-btn').findOne().click()
     } else if (
-      className('android.widget.TextView').text('收取营养液').exists()
+      className('android.widget.TextView').textContains('收取营养液').exists()
     ) {
       //种豆得豆
       back()
@@ -185,12 +218,47 @@ const task = () => {
           .bounds()
         click(w3.centerX(), w3.centerY())
         sleep(3000)
-        if (className('android.widget.TextView').text('知道了').exists()) {
+        if (
+          className('android.widget.TextView').textContains('知道了').exists()
+        ) {
           className('android.view.ViewGroup').depth(3).findOne().click()
         }
       } else {
         back()
       }
+    } else if (
+      textContains('恭喜获得').exists() &&
+      textContains('成功加入会员').exists()
+    ) {
+      const w11 = textContains('我知道了').findOne().parent().bounds()
+      click(w11.centerX(), w11.centerY())
+      sleep(5000)
+    } else if (
+      textContains('会员卡详情').exists() &&
+      textContains('领取成功').exists()
+    ) {
+      const w9 = className('android.widget.TextView')
+        .textContains('确定')
+        .findOne()
+        .parent()
+        .bounds()
+      click(w9.centerX(), w9.centerY())
+    } else if (textContains('暂不授权').exists()) {
+      const w7 = className('android.widget.TextView')
+        .textContains('确认授权并加入会员')
+        .findOne()
+        .parent()
+        .bounds()
+      click(w7.centerX(), w7.centerY())
+      sleep(5000)
+    } else if (textContains('确认授权即同意').exists()) {
+      const w5 = textContains('确认授权即同意')
+        .findOne()
+        .parent()
+        .child(2)
+        .bounds()
+      click(w5.centerX(), w5.centerY())
+      sleep(5000)
     } else if (idContains('com.jd.lib.jshop:id/fd').exists()) {
       idContains('com.jd.lib.jshop:id/fd').findOne().click()
     } else if (idContains('com.jd.lib.jshop:id/fe').exists()) {
