@@ -1,28 +1,28 @@
 let btnIndex = 0 //跳过一些无法完成的任务
 let viewCount = 0 //浏览商品计数
-const interval = 1500 //任务执行间隔，手机性能差的设置大一些
-const sleepTime = 20000 //有些场景加载得很慢，建议设置大一些
+const interval = 2000 //任务执行间隔，手机性能差的设置大一些
 const version = device.release //安卓版本
 const member = true //跳过会员
 
 //autojs4.1尚未支持class关键字（保留字），只能用传统的工厂函数，强迫症犯了草
-function Stall(btnIndex, viewCount, sleepTime, interval, version, member) {
+function Stall(btnIndex, viewCount, interval, version, member) {
   this.btnIndex = btnIndex
   this.viewCount = viewCount
   this.interval = interval
-  this.sleepTime = sleepTime
   this.version = version
   this.member = member
   this.next = true
+  this.finish = false
 
   //主会场页面
   //TODO：测试并修改判断完成逻辑
   this.mainHallPage = () => {
-    const conditions = className('android.view.View')
-      .clickable(true)
-      .depth(5)
-      .exists()
+    const conditions =
+      textContains('推荐').exists() &&
+      textContains('预售').exists() &&
+      textContains('头号京贴').exists()
     if (this.next && conditions) {
+      sleep(25000)
       this.backToTaskPage()
       this.next = false
     }
@@ -181,7 +181,10 @@ function Stall(btnIndex, viewCount, sleepTime, interval, version, member) {
         this.btnIndex++
       }
       if (textContains('去完成').exists()) {
-        click('去完成', this.btnIndex)
+        const result = click('去完成', this.btnIndex)
+        if (!result) {
+          this.finish = true
+        }
       }
       this.next = false
     }
@@ -230,7 +233,8 @@ function Stall(btnIndex, viewCount, sleepTime, interval, version, member) {
     toast('开始执行任务')
     for (;;) {
       this.next = true
-      sleep(this.sleepTime)
+      sleep(this.interval)
+      this.mainHallPage()
       this.cityPage()
       this.beanPage()
       this.friendsPage()
@@ -243,18 +247,14 @@ function Stall(btnIndex, viewCount, sleepTime, interval, version, member) {
       this.normalPage()
       this.memberPage()
       this.taskPage()
-      this.mainHallPage()
       this.otherPage()
+      if (this.finish) {
+        toast('任务完成')
+        break
+      }
     }
   }
 }
 
-const stall = new Stall(
-  btnIndex,
-  viewCount,
-  interval,
-  sleepTime,
-  version,
-  member
-)
+const stall = new Stall(btnIndex, viewCount, interval, version, member)
 stall.taskQueue()
