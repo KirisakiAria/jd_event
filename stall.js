@@ -166,15 +166,6 @@ function Stall(btnIndex, viewCount, interval, member) {
     }
   }
 
-  //京东魔方
-  this.cubePage = () => {
-    const conditions = textContains('每获得30分可抽一次奖').exists()
-    if (this.next && conditions) {
-      this.backToTaskPage()
-      this.next = false
-    }
-  }
-
   //任务列表页
   this.taskPage = () => {
     const conditions = textContains('邀请好友助力')
