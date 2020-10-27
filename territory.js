@@ -1,9 +1,10 @@
 let index = 0
 let btnIndex = 0
-const interval = 2000 //任务执行间隔，手机性能差的设置大一些
+const interval = 4000 //任务执行间隔，手机性能差的设置大一些
 
-function Territory(index, interval) {
+function Territory(index, btnIndex, interval) {
   this.index = index
+  this.btnIndex = btnIndex
   this.interval = interval
   this.next = true
   this.finish = false
@@ -42,12 +43,12 @@ function Territory(index, interval) {
     '银川',
     '兰州',
     '乌鲁木齐',
-    '热爱城',
+    '热爱城'
   ]
 
   //一般浏览页面
   this.normalPage = () => {
-    sleep(3000)
+    sleep(1500)
     if (this.next) {
       this.backToTaskPage()
       this.next = false
@@ -56,16 +57,15 @@ function Territory(index, interval) {
 
   //任务列表页
   this.taskPage = () => {
-    const conditions = textContains('每日签到')
+    const conditions =
+      textContains('精彩推荐 好货直达').exists() &&
+      textContains('每日签到').exists()
     if (this.next && conditions) {
-      const city = this.cityList[index]
-      if (textContains(city).exists()) {
-        const result = click(city, this.btnIndex)
-        if (!result) {
-          this.btnIndex = 0
-          index++
-          this.backToTaskPage()
-        }
+      const result = click('去完成', this.btnIndex)
+      if (!result) {
+        toast('任务已经全部完成，返回版图')
+        index++
+        this.backToTaskPage()
       }
       this.next = false
     }
@@ -73,11 +73,12 @@ function Territory(index, interval) {
 
   //版图页
   this.territoryPage = () => {
-    const conditions = textContains('营业版图')
+    const conditions =
+      textContains('营业版图').exists() && textContains('当前开店进度').exists()
     if (this.next && conditions) {
-      if (textContains('去完成').exists()) {
-        const result = click('去完成', this.btnIndex)
-      }
+      const city = this.cityList[index]
+      toast('当前城市：' + city)
+      click(city, 0)
       this.next = false
     }
   }
@@ -128,5 +129,5 @@ function Territory(index, interval) {
   }
 }
 
-const territory = new Territory(index)
+const territory = new Territory(index, btnIndex, interval)
 territory.taskQueue()
