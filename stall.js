@@ -21,7 +21,7 @@ function Stall(btnIndex, viewCount, interval, member) {
       textContains('预售').exists() &&
       textContains('头号京贴').exists()
     if (this.next && conditions) {
-      sleep(25000)
+      sleep(20000)
       this.backToTaskPage()
       this.next = false
     }
@@ -141,8 +141,11 @@ function Stall(btnIndex, viewCount, interval, member) {
 
   //京东朋友圈
   this.friendsPage = () => {
-    const conditions = textContains('京友圈').exists()
+    const conditions =
+      textContains('京友圈').exists() && textContains('推荐好友').exists()
     if (this.next && conditions) {
+      this.backToTaskPage()
+      sleep(2000)
       this.backToTaskPage()
       this.next = false
     }
@@ -159,7 +162,8 @@ function Stall(btnIndex, viewCount, interval, member) {
 
   //摇一摇
   this.shakePage = () => {
-    const conditions = textContains('摇一摇').exists()
+    const conditions =
+      textContains('摇一摇').exists() && textContains('当前可摇').exists()
     if (this.next && conditions) {
       this.backToTaskPage()
       this.next = false
