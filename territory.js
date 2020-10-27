@@ -63,7 +63,7 @@ function Territory(index, btnIndex, interval) {
     if (this.next && conditions) {
       const result = click('去完成', this.btnIndex)
       if (!result) {
-        toast('任务已经全部完成，返回版图')
+        toast('当前城市完成，返回版图')
         index++
         this.backToTaskPage()
       }
@@ -76,10 +76,15 @@ function Territory(index, btnIndex, interval) {
     const conditions =
       textContains('营业版图').exists() && textContains('当前开店进度').exists()
     if (this.next && conditions) {
-      const city = this.cityList[index]
-      toast('当前城市：' + city)
-      click(city, 0)
-      this.next = false
+      if (index >= this.cityList.length) {
+        this.finish = true
+        this.next = false
+      } else {
+        const city = this.cityList[index]
+        toast('当前城市：' + city)
+        click(city, 0)
+        this.next = false
+      }
     }
   }
 
