@@ -1,17 +1,46 @@
-let btnIndex = 0 //跳过一些无法完成的任务
-let viewCount = 0 //浏览商品计数
+let btnIndex = 0 //将要点击按钮的序号，跳过一些无法完成的任务
+let itemCount = 0 //浏览、加购商品计数
 const interval = 2000 //任务执行间隔，手机性能差的设置大一些
 const member = true //跳过会员
 const unfollow = false //浏览店铺任务后自动取关店铺
 
+const backToTaskPage = () => {
+  if (idContains('title_back').exists()) {
+    idContains('title_back').findOne().click()
+  } else if (idContains('yl').exists()) {
+    idContains('yl').findOne().click()
+  } else if (idContains('com.jd.lib.jshop:id/fd').exists()) {
+    idContains('com.jd.lib.jshop:id/fd').findOne().click()
+  } else if (idContains('com.jd.lib.jshop:id/fe').exists()) {
+    idContains('com.jd.lib.jshop:id/fe').findOne().click()
+  } else if (
+    classNameContains('android.view.ViewGroup').desc('返回按钮').exists()
+  ) {
+    classNameContains('android.view.ViewGroup')
+      .desc('返回按钮')
+      .findOne()
+      .click()
+  } else if (idContains('com.jingdong.app.mall:id/fe').exists()) {
+    idContains('com.jingdong.app.mall:id/fe').findOne().click()
+  } else if (idContains('com.jingdong.app.mall:id/fd').exists()) {
+    idContains('com.jingdong.app.mall:id/fd').findOne().click()
+  } else if (idContains('fe').exists()) {
+    idContains('fe').findOne().click()
+  } else if (idContains('fd').exists()) {
+    idContains('fd').findOne().click()
+  } else {
+    back()
+  }
+}
+
 //autojs4.1尚未支持class关键字（保留字），只能用传统的工厂函数，强迫症犯了草
-function Stall(btnIndex, viewCount, interval, member) {
+function Stall(btnIndex, itemCount, interval, member) {
   this.btnIndex = btnIndex
-  this.viewCount = viewCount
+  this.itemCount = itemCount
   this.interval = interval
   this.member = member
   this.next = true
-  this.finish = false
+  this.switch = true
 
   //主会场页面
   //TODO：测试并修改判断完成逻辑
@@ -22,7 +51,7 @@ function Stall(btnIndex, viewCount, interval, member) {
       textContains('头号京贴').exists()
     if (this.next && conditions) {
       sleep(20000)
-      this.backToTaskPage()
+      backToTaskPage()
       this.next = false
     }
   }
@@ -34,8 +63,9 @@ function Stall(btnIndex, viewCount, interval, member) {
     if (this.next && conditions) {
       if (unfollow && idContains('qa').exists()) {
         idContains('qa').findOne().click()
+        sleep(200)
       }
-      this.backToTaskPage()
+      backToTaskPage()
       this.next = false
     }
   }
@@ -46,7 +76,7 @@ function Stall(btnIndex, viewCount, interval, member) {
       textContains('邀人进商圈').exists() && textEndsWith('的商圈').exists()
     if (this.next && conditions) {
       this.btnIndex++
-      this.backToTaskPage()
+      backToTaskPage()
       this.next = false
     }
   }
@@ -57,16 +87,16 @@ function Stall(btnIndex, viewCount, interval, member) {
     if (this.next && conditions) {
       if (textContains('已完成').exists()) {
         this.next = false
-        this.viewCount = 0
-        return this.backToTaskPage()
+        this.itemCount = 0
+        return backToTaskPage()
       }
       textMatches('^¥[0-9]+.[0-9][0-9]')
         .find()
-        [this.viewCount].parent()
+        [this.itemCount].parent()
         .parent()
         .child(3)
         .click()
-      this.viewCount++
+      this.itemCount++
       this.next = false
     }
   }
@@ -77,13 +107,13 @@ function Stall(btnIndex, viewCount, interval, member) {
     if (this.next && conditions) {
       if (textContains('已完成').exists()) {
         this.next = false
-        this.viewCount = 0
-        return this.backToTaskPage()
+        this.itemCount = 0
+        return backToTaskPage()
       }
-      idContains('jmdd-react-smash_' + this.viewCount)
+      idContains('jmdd-react-smash_' + this.itemCount)
         .findOne()
         .click()
-      this.viewCount++
+      this.itemCount++
       this.next = false
     }
   }
@@ -96,7 +126,7 @@ function Stall(btnIndex, viewCount, interval, member) {
       textContains('联系客服').exists() && textContains('购物车').exists()
     if (this.next && (conditions || conditions2)) {
       sleep(1000)
-      this.backToTaskPage()
+      backToTaskPage()
       this.next = false
     }
   }
@@ -108,10 +138,10 @@ function Stall(btnIndex, viewCount, interval, member) {
       if (this.member) {
         textContains('确认授权并加入店铺会员').findOne().click()
         sleep(2000)
-        this.backToTaskPage()
+        backToTaskPage()
       } else {
         this.btnIndex++
-        this.backToTaskPage()
+        backToTaskPage()
       }
       this.next = false
     }
@@ -121,7 +151,7 @@ function Stall(btnIndex, viewCount, interval, member) {
   this.cityPage = () => {
     const conditions = textContains('最高可提现1111元').exists()
     if (this.next && conditions) {
-      this.backToTaskPage()
+      backToTaskPage()
       sleep(1000)
       if (textContains('暂时离开').exists()) {
         textContains('暂时离开').findOne().click()
@@ -134,7 +164,7 @@ function Stall(btnIndex, viewCount, interval, member) {
   this.beanPage = () => {
     const conditions = textContains('豆苗成长值').exists()
     if (this.next && conditions) {
-      this.backToTaskPage()
+      backToTaskPage()
       this.next = false
     }
   }
@@ -144,9 +174,9 @@ function Stall(btnIndex, viewCount, interval, member) {
     const conditions =
       textContains('京友圈').exists() && textContains('推荐好友').exists()
     if (this.next && conditions) {
-      this.backToTaskPage()
+      backToTaskPage()
       sleep(2000)
-      this.backToTaskPage()
+      backToTaskPage()
       this.next = false
     }
   }
@@ -155,7 +185,7 @@ function Stall(btnIndex, viewCount, interval, member) {
   this.cubePage = () => {
     const conditions = textContains('每获得30分可抽一次奖').exists()
     if (this.next && conditions) {
-      this.backToTaskPage()
+      backToTaskPage()
       this.next = false
     }
   }
@@ -165,7 +195,16 @@ function Stall(btnIndex, viewCount, interval, member) {
     const conditions =
       textContains('摇一摇').exists() && textContains('当前可摇').exists()
     if (this.next && conditions) {
-      this.backToTaskPage()
+      backToTaskPage()
+      this.next = false
+    }
+  }
+
+  //巅峰王牌
+  this.trumpPage = () => {
+    const conditions = textContains('喜欢的品牌看更多').exists()
+    if (this.next && conditions) {
+      backToTaskPage()
       this.next = false
     }
   }
@@ -180,7 +219,8 @@ function Stall(btnIndex, viewCount, interval, member) {
       if (textContains('去完成').exists()) {
         const result = click('去完成', this.btnIndex)
         if (!result) {
-          this.finish = true
+          toast('已经完成所有任务')
+          this.switch = false
         }
       }
       this.next = false
@@ -191,44 +231,19 @@ function Stall(btnIndex, viewCount, interval, member) {
   this.otherPage = () => {
     sleep(3000)
     if (this.next) {
-      this.backToTaskPage()
+      backToTaskPage()
       this.next = false
     }
   }
 
   //返回任务列表
-  this.backToTaskPage = () => {
-    if (idContains('title_back').exists()) {
-      idContains('title_back').findOne().click()
-    } else if (idContains('yl').exists()) {
-      idContains('yl').findOne().click()
-    } else if (idContains('com.jd.lib.jshop:id/fd').exists()) {
-      idContains('com.jd.lib.jshop:id/fd').findOne().click()
-    } else if (idContains('com.jd.lib.jshop:id/fe').exists()) {
-      idContains('com.jd.lib.jshop:id/fe').findOne().click()
-    } else if (
-      classNameContains('android.view.ViewGroup').desc('返回按钮').exists()
-    ) {
-      classNameContains('android.view.ViewGroup')
-        .desc('返回按钮')
-        .findOne()
-        .click()
-    } else if (idContains('com.jingdong.app.mall:id/fe').exists()) {
-      idContains('com.jingdong.app.mall:id/fe').findOne().click()
-    } else if (idContains('com.jingdong.app.mall:id/fd').exists()) {
-      idContains('com.jingdong.app.mall:id/fd').findOne().click()
-    } else if (idContains('fe').exists()) {
-      idContains('fe').findOne().click()
-    } else if (idContains('fd').exists()) {
-      idContains('fd').findOne().click()
-    } else {
-      back()
-    }
-  }
-
-  this.taskQueue = () => {
-    toast('开始执行任务')
+  this.start = () => {
+    toast('开始执行一般任务，请打开任务列表')
     for (;;) {
+      if (!this.switch) {
+        toast('停止一般任务')
+        break
+      }
       this.next = true
       sleep(this.interval)
       this.mainHallPage()
@@ -238,6 +253,7 @@ function Stall(btnIndex, viewCount, interval, member) {
       this.cubePage()
       this.shakePage()
       this.circlePage()
+      this.trumpPage()
       this.detadilsPage()
       this.viewTaskPage()
       this.cartTaskPage()
@@ -245,13 +261,118 @@ function Stall(btnIndex, viewCount, interval, member) {
       this.memberPage()
       this.taskPage()
       this.otherPage()
-      if (this.finish) {
-        toast('任务完成')
-        break
-      }
     }
+  }
+
+  this.stop = () => {
+    this.switch = false
   }
 }
 
-const stall = new Stall(btnIndex, viewCount, interval, member)
-stall.taskQueue()
+function Chest(interval) {
+  this.interval = interval
+  this.switch = true
+  this.next = true
+  this.btnIndex = 0
+
+  this.normalPage = () => {
+    sleep(2000)
+    if (this.next) {
+      backToTaskPage()
+      this.btnIndex++
+      this.next = false
+    }
+  }
+
+  this.chestPage = () => {
+    const conditions = textContains('宝箱随机藏在以下').exists()
+    if (this.next && conditions) {
+      textContains('宝箱随机藏在以下')
+        .findOne()
+        .parent()
+        .child(2)
+        .child(this.btnIndex)
+        .child(0)
+        .click()
+      if (this.btnIndex > 20) {
+        this.switch = false
+      }
+      this.next = false
+    }
+  }
+  this.start = () => {
+    for (;;) {
+      if (!this.switch) {
+        toast('停止寻宝任务')
+        break
+      }
+      this.next = true
+      sleep(this.interval)
+      this.chestPage()
+      this.normalPage()
+    }
+  }
+  this.stop = () => {
+    this.switch = false
+  }
+}
+
+const stall = new Stall(btnIndex, itemCount, interval, member)
+const chest = new Chest(interval)
+
+const stallBtn = floaty.window(
+  <horizontal>
+    <button id="stall" text="重新开始任务" />
+  </horizontal>
+)
+
+const chestBtn = floaty.window(
+  <horizontal>
+    <button id="chest" text="寻宝箱" />
+  </horizontal>
+)
+
+const stopBtn = floaty.window(
+  <horizontal>
+    <button id="stop" text="停止所有任务" />
+  </horizontal>
+)
+
+stallBtn.setPosition(150, 0)
+chestBtn.setPosition(150, 150)
+stopBtn.setPosition(150, 300)
+
+stallBtn.stall.click(() => {
+  threads.shutDownAll()
+  threads.start(function () {
+    toast('重新执行一般任务')
+    chest.stop()
+    stall.stop()
+    stall.switch = true
+    stall.start()
+  })
+})
+
+chestBtn.chest.click(() => {
+  threads.shutDownAll()
+  threads.start(function () {
+    toast('执行点击宝箱任务')
+    chest.stop()
+    stall.stop()
+    chest.switch = true
+    chest.start()
+  })
+})
+
+stopBtn.stop.click(() => {
+  toast('停止所有任务')
+  threads.shutDownAll()
+  stall.switch = false
+  chest.switch = false
+})
+
+threads.start(function () {
+  stall.start()
+})
+
+setInterval(() => {}, 500)

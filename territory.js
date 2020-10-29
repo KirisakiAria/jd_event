@@ -1,6 +1,6 @@
 let index = 0
 let btnIndex = 0
-const interval = 4000 //任务执行间隔，手机性能差的设置大一些
+const interval = 3000 //任务执行间隔，手机性能差的设置大一些
 
 function Territory(index, btnIndex, interval) {
   this.index = index
@@ -118,7 +118,7 @@ function Territory(index, btnIndex, interval) {
     }
   }
 
-  this.taskQueue = () => {
+  this.start = () => {
     toast('开始执行任务')
     for (;;) {
       this.next = true
@@ -135,4 +135,4 @@ function Territory(index, btnIndex, interval) {
 }
 
 const territory = new Territory(index, btnIndex, interval)
-territory.taskQueue()
+territory.start()
