@@ -209,6 +209,26 @@ function Stall(btnIndex, itemCount, interval, member) {
     }
   }
 
+  //天天点点券
+  this.voucherPage = () => {
+    const conditions =
+      textContains('天天点点券').exists() && textContains('我的点点券').exists()
+    if (this.next && conditions) {
+      backToTaskPage()
+      this.next = false
+    }
+  }
+
+  //品质男装
+  this.menPage = () => {
+    const conditions =
+      textContains('品质男装').exists() && textContains('定金10抵100').exists()
+    if (this.next && conditions) {
+      backToTaskPage()
+      this.next = false
+    }
+  }
+
   //任务列表页
   this.taskPage = () => {
     const conditions = textContains('邀请好友助力')
@@ -254,6 +274,8 @@ function Stall(btnIndex, itemCount, interval, member) {
       this.shakePage()
       this.circlePage()
       this.trumpPage()
+      this.voucherPage()
+      this.menPage()
       this.detadilsPage()
       this.viewTaskPage()
       this.cartTaskPage()
