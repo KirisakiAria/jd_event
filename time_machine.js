@@ -1,50 +1,49 @@
-let index = 0 //城市的序号
+let storeIndex1 = 0 //超级品牌
+let storeIndex2 = 0 //大牌品牌
 let btnIndex = 0 //将要点击按钮的序号，跳过一些无法完成的任务
 const interval = 3000 //任务执行间隔，手机性能差的设置大一些
 
-function Territory(index, btnIndex, interval) {
-  this.index = index
+function TimeMachine(storeIndex1, storeIndex2, btnIndex, interval) {
+  this.storeIndex1 = storeIndex1
+  this.storeIndex2 = storeIndex2
   this.btnIndex = btnIndex
   this.interval = interval
-  this.next = true
   this.finish = false
-  this.cityList = [
-    '北京',
-    '沈阳',
-    '长春',
-    '呼和浩特',
-    '哈尔滨',
-    '石家庄',
-    '天津',
-    '济南',
-    '太原',
-    '西安',
-    '郑州',
-    '合肥',
-    '南京',
-    '杭州',
-    '上海',
-    '重庆',
-    '成都',
-    '贵阳',
-    '武汉',
-    '长沙',
-    '南昌',
-    '福州',
-    '台北',
-    '广州',
-    '香港',
-    '南宁',
-    '澳门',
-    '海口',
-    '昆明',
-    '拉萨',
-    '西宁',
-    '银川',
-    '兰州',
-    '乌鲁木齐',
-    '热爱城'
-  ]
+  this.next = true
+
+  //店铺列表页1
+  this.store1Page = () => {
+    const conditions = textContains('逛超级品牌立得').exists()
+    if (this.next && conditions) {
+      if (textContains('9/9').exists() || this.storeIndex1 >= 9) {
+        this.next = true
+        return false
+      }
+      this.storeIndex1++
+      textContains('逛超级品牌立得')
+        .findOne()
+        .parent()
+        .child(2)
+        .child(0)
+        .click()
+      this.next = false
+    }
+  }
+
+  //店铺列表页2
+  this.store2Page = () => {
+    const conditions = textContains('逛大牌品牌立得').exists()
+    if (this.next && conditions) {
+      if (textContains('33/33').exists() || this.storeIndex2 >= 33) {
+        toast('已经完成所有品牌浏览任务，请打开任务列表')
+        this.next = false
+        return false
+      }
+      this.storeIndex2++
+      textContains('逛大牌品牌立得').findOne().parent().child(1).click()
+      this.next = false
+    }
+  }
 
   //一般浏览页面
   this.normalPage = () => {
@@ -58,33 +57,29 @@ function Territory(index, btnIndex, interval) {
   //任务列表页
   this.taskPage = () => {
     const conditions =
-      textContains('精彩推荐 好货直达').exists() &&
-      textContains('每日签到').exists()
+      textContains('邀请好友一起玩').exists() &&
+      textContains('体验AR热爱空间').exists()
     if (this.next && conditions) {
-      const result = click('去完成', this.btnIndex)
-      if (!result) {
-        toast('当前城市完成，返回版图')
-        index++
-        this.backToTaskPage()
+      if (textContains('去完成').exists()) {
+        const result = click('去完成', this.btnIndex)
+        if (!result) {
+          toast('已经完成所有任务')
+          this.finish = true
+        }
       }
       this.next = false
     }
   }
 
-  //版图页
-  this.territoryPage = () => {
+  //分享窗口判断
+  this.shareModal = () => {
     const conditions =
-      textContains('营业版图').exists() && textContains('当前开店进度').exists()
+      textContains('微信好友').exists() && textContains('朋友圈').exists()
     if (this.next && conditions) {
-      if (index >= this.cityList.length) {
-        this.finish = true
-        this.next = false
-      } else {
-        const city = this.cityList[index]
-        toast('当前城市：' + city)
-        click(city, 0)
-        this.next = false
-      }
+      toast('已经完成所有任务')
+      this.finish = true
+      this.next = false
+      textContains('取消').findOne().click()
     }
   }
 
@@ -123,8 +118,10 @@ function Territory(index, btnIndex, interval) {
     for (;;) {
       this.next = true
       sleep(this.interval)
+      this.shareModal()
       this.taskPage()
-      this.territoryPage()
+      this.store1Page()
+      this.store2Page()
       this.normalPage()
       if (this.finish) {
         toast('任务完成')
@@ -134,5 +131,10 @@ function Territory(index, btnIndex, interval) {
   }
 }
 
-const territory = new Territory(index, btnIndex, interval)
-territory.start()
+const timeMachine = new TimeMachine(
+  storeIndex1,
+  storeIndex2,
+  btnIndex,
+  interval
+)
+timeMachine.start()
