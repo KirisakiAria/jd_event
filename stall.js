@@ -229,6 +229,30 @@ function Stall(btnIndex, itemCount, interval, member) {
     }
   }
 
+  //东东小窝
+  this.homePage = () => {
+    const conditions =
+      textContains('东东小窝').exists() &&
+      textContains('家具').exists() &&
+      textContains('装饰').exists() &&
+      textContains('灯具').exists()
+    if (this.next && conditions) {
+      backToTaskPage()
+      this.next = false
+    }
+  }
+
+  //双签领现金
+  this.signPage = () => {
+    const conditions =
+      textContains('双签领现金').exists() &&
+      textContains('去京东APP签到').exists()
+    if (this.next && conditions) {
+      backToTaskPage()
+      this.next = false
+    }
+  }
+
   //任务列表页
   this.taskPage = () => {
     const conditions = textContains('邀请好友助力')
@@ -276,6 +300,8 @@ function Stall(btnIndex, itemCount, interval, member) {
       this.trumpPage()
       this.voucherPage()
       this.menPage()
+      this.homePage()
+      this.signPage()
       this.detadilsPage()
       this.viewTaskPage()
       this.cartTaskPage()

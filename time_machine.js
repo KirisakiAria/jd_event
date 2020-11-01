@@ -1,11 +1,22 @@
 let storeIndex1 = 0 //超级品牌
 let storeIndex2 = 0 //大牌品牌
+let storeIndex3 = 0 //同城好店
+let storeIndex4 = 0 //同城好店2
 let btnIndex = 0 //将要点击按钮的序号，跳过一些无法完成的任务
 const interval = 3000 //任务执行间隔，手机性能差的设置大一些
 
-function TimeMachine(storeIndex1, storeIndex2, btnIndex, interval) {
+function TimeMachine(
+  storeIndex1,
+  storeIndex2,
+  storeIndex3,
+  storeIndex4,
+  btnIndex,
+  interval
+) {
   this.storeIndex1 = storeIndex1
   this.storeIndex2 = storeIndex2
+  this.storeIndex3 = storeIndex3
+  this.storeIndex4 = storeIndex4
   this.btnIndex = btnIndex
   this.interval = interval
   this.finish = false
@@ -35,12 +46,54 @@ function TimeMachine(storeIndex1, storeIndex2, btnIndex, interval) {
     const conditions = textContains('逛大牌品牌立得').exists()
     if (this.next && conditions) {
       if (textContains('33/33').exists() || this.storeIndex2 >= 33) {
-        toast('已经完成所有品牌浏览任务，请打开任务列表')
-        this.next = false
+        this.next = true
         return false
       }
       this.storeIndex2++
       textContains('逛大牌品牌立得').findOne().parent().child(1).click()
+      this.next = false
+    }
+  }
+
+  //店铺列表页3
+  this.store3Page = () => {
+    const conditions = textContains('逛精选同城好店').exists()
+    if (this.next && conditions) {
+      if (textContains('4/4').exists() || this.storeIndex3 >= 4) {
+        this.next = true
+        return false
+      }
+      this.storeIndex3++
+      textContains('逛精选同城好店')
+        .findOne()
+        .parent()
+        .parent()
+        .child(4)
+        .child(0)
+        .child(0)
+        .click()
+      this.next = false
+    }
+  }
+
+  //店铺列表页4
+  this.store4Page = () => {
+    const conditions = textContains('逛精选同城好店').exists()
+    if (this.next && conditions) {
+      if (text('3/3').exists() || this.storeIndex4 >= 3) {
+        toast('已经完成所有品牌浏览任务，请打开任务列表')
+        this.next = false
+        return false
+      }
+      this.storeIndex4++
+      textContains('逛精选同城好店')
+        .findOne()
+        .parent()
+        .parent()
+        .child(8)
+        .child(0)
+        .child(0)
+        .click()
       this.next = false
     }
   }
@@ -57,8 +110,11 @@ function TimeMachine(storeIndex1, storeIndex2, btnIndex, interval) {
   //任务列表页
   this.taskPage = () => {
     const conditions =
-      textContains('邀请好友一起玩').exists() &&
-      textContains('体验AR热爱空间').exists()
+      textContains('逛同城附近好店').exists() ||
+      textContains('精选会场').exists() ||
+      textContains('体验AR热爱空间').exists() ||
+      textContains('浏览会场采集能量包').exists() ||
+      textContains('邀请好友一起玩').exists()
     if (this.next && conditions) {
       if (textContains('去完成').exists()) {
         const result = click('去完成', this.btnIndex)
@@ -122,6 +178,8 @@ function TimeMachine(storeIndex1, storeIndex2, btnIndex, interval) {
       this.taskPage()
       this.store1Page()
       this.store2Page()
+      this.store3Page()
+      this.store4Page()
       this.normalPage()
       if (this.finish) {
         toast('任务完成')
@@ -134,6 +192,8 @@ function TimeMachine(storeIndex1, storeIndex2, btnIndex, interval) {
 const timeMachine = new TimeMachine(
   storeIndex1,
   storeIndex2,
+  storeIndex3,
+  storeIndex4,
   btnIndex,
   interval
 )
