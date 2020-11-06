@@ -1,4 +1,4 @@
-let btnIndex = 0 //将要点击按钮的序号，跳过一些无法完成的任务
+let btnIndex = 2 //将要点击按钮的序号，跳过一些无法完成的任务
 let itemCount = 0 //浏览、加购商品计数
 const interval = 2000 //任务执行间隔，手机性能差的设置大一些
 const member = true //跳过会员
@@ -174,8 +174,8 @@ function Stall(btnIndex, itemCount, interval, member) {
     const conditions =
       textContains('京友圈').exists() && textContains('推荐好友').exists()
     if (this.next && conditions) {
+      sleep(12000)
       backToTaskPage()
-      sleep(2000)
       backToTaskPage()
       this.next = false
     }
@@ -202,7 +202,7 @@ function Stall(btnIndex, itemCount, interval, member) {
 
   //巅峰王牌
   this.trumpPage = () => {
-    const conditions = textContains('喜欢的品牌看更多').exists()
+    const conditions = textContains('今日主推品牌').exists()
     if (this.next && conditions) {
       backToTaskPage()
       this.next = false
@@ -253,6 +253,68 @@ function Stall(btnIndex, itemCount, interval, member) {
     }
   }
 
+  //领京豆页面
+  this.getBeanPage = () => {
+    const conditions =
+      textContains('双签领豆').exists() && textContains('抽京豆').exists()
+    if (this.next && conditions) {
+      backToTaskPage()
+      this.next = false
+    }
+  }
+
+  //京东会员
+  this.jdMemberPage = () => {
+    const conditions =
+      textContains('当前京享值').exists() && textContains('京东会员').exists()
+    if (this.next && conditions) {
+      backToTaskPage()
+      this.next = false
+    }
+  }
+
+  //天天加速
+  this.speedUpPage = () => {
+    const conditions =
+      textContains('空间站').exists() && textContains('悬赏').exists()
+    if (this.next && conditions) {
+      backToTaskPage()
+      this.next = false
+    }
+  }
+
+  //家电主会场
+  this.appliancesPage = () => {
+    const conditions =
+      textContains('11.11家电主会场').exists() &&
+      idContains('timeline-app').exists()
+    if (this.next && conditions) {
+      backToTaskPage()
+      this.next = false
+    }
+  }
+
+  this.shareModal = () => {
+    const conditions =
+      textContains('口令').exists() && textContains('取消').exists()
+    if (this.next && conditions) {
+      textContains('取消').findOne().click()
+      this.btnIndex++
+      this.next = false
+    }
+  }
+
+  this.tipsModal = () => {
+    const conditions =
+      textContains('京东首页搜').exists() &&
+      textContains('快速进入').exists() &&
+      textContains('知道了').exists()
+    if (this.next && conditions) {
+      textContains('知道了').findOne().click()
+      this.next = false
+    }
+  }
+
   //任务列表页
   this.taskPage = () => {
     const conditions = textContains('邀请好友助力')
@@ -271,15 +333,6 @@ function Stall(btnIndex, itemCount, interval, member) {
     }
   }
 
-  //其他未统计到的页面
-  this.otherPage = () => {
-    sleep(3000)
-    if (this.next) {
-      backToTaskPage()
-      this.next = false
-    }
-  }
-
   //返回任务列表
   this.start = () => {
     toast('开始执行一般任务，请打开任务列表')
@@ -290,6 +343,8 @@ function Stall(btnIndex, itemCount, interval, member) {
       }
       this.next = true
       sleep(this.interval)
+      this.shareModal()
+      this.tipsModal()
       this.mainHallPage()
       this.cityPage()
       this.beanPage()
@@ -299,6 +354,10 @@ function Stall(btnIndex, itemCount, interval, member) {
       this.circlePage()
       this.trumpPage()
       this.voucherPage()
+      this.getBeanPage()
+      this.jdMemberPage()
+      this.speedUpPage()
+      this.appliancesPage()
       this.menPage()
       this.homePage()
       this.signPage()
@@ -308,7 +367,6 @@ function Stall(btnIndex, itemCount, interval, member) {
       this.normalPage()
       this.memberPage()
       this.taskPage()
-      this.otherPage()
     }
   }
 
