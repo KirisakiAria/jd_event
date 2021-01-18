@@ -41,6 +41,32 @@ const backToTaskPage = () => {
         .boundsInside(800, 1000, device.width, device.height)
         .findOne()
         .click()
+    } else if (
+      className('android.view.View')
+        .boundsInside(800, 1000, device.width, device.height)
+        .clickable(true)
+        .depth(7)
+        .exists()
+    ) {
+      className('android.view.View')
+        .boundsInside(800, 1000, device.width, device.height)
+        .clickable(true)
+        .depth(7)
+        .findOne()
+        .click()
+    } else if (
+      className('android.view.View')
+        .boundsInside(800, 1000, device.width, device.height)
+        .clickable(true)
+        .depth(9)
+        .exists()
+    ) {
+      className('android.view.View')
+        .boundsInside(800, 1000, device.width, device.height)
+        .clickable(true)
+        .depth(9)
+        .findOne()
+        .click()
     } else {
       back()
     }
@@ -185,13 +211,13 @@ function MainTask(btnIndex, itemCount, interval, member) {
       }
       this.next = true
       sleep(this.interval)
-      this.speedPage()
       this.memberPage()
       this.beanPage()
       this.detadilsPage()
       this.cartTaskPage()
       this.taskListPage()
       this.miniPage()
+      this.speedPage()
       this.normalPage()
     }
   }
