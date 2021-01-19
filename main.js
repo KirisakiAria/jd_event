@@ -2,21 +2,25 @@ let btnIndex = 1 //将要点击按钮的序号，跳过一些无法完成的任�
 let itemCount = 0 //浏览、加购商品计数
 const interval = 2000 //任务执行间隔，手机性能差的设置大一些
 const member = false //设置是否加入会员。true为加入、false为跳过
-// const unfollow = false //浏览店铺任务后自动取关店铺
+const unfollow = true //浏览店铺任务后自动取关店铺
 
 const backToTaskPage = () => {
   //如果在任务首页，不走返回逻辑
   const ifHomePage =
     textContains('去完成').exists() && textContains('签到').exists()
   if (!ifHomePage) {
-    if (idContains('title_back').exists()) {
-      idContains('title_back').findOne().click()
-    } else if (idContains('yl').exists()) {
-      idContains('yl').findOne().click()
-    } else if (idContains('com.jd.lib.jshop:id/fd').exists()) {
-      idContains('com.jd.lib.jshop:id/fd').findOne().click()
-    } else if (idContains('com.jd.lib.jshop:id/fe').exists()) {
-      idContains('com.jd.lib.jshop:id/fe').findOne().click()
+    if (id('title_back').exists()) {
+      id('title_back').findOne().click()
+    } else if (id('yl').exists()) {
+      id('yl').findOne().click()
+    } else if (id('yp').exists()) {
+      id('yp').findOne().click()
+    } else if (id('com.jd.lib.jshop:id/fd').exists()) {
+      id('com.jd.lib.jshop:id/fd').findOne().click()
+    } else if (id('com.jd.lib.jshop:id/fe').exists()) {
+      id('com.jd.lib.jshop:id/fe').findOne().click()
+    } else if (id('d').exists()) {
+      id('d').findOne().click()
     } else if (
       classNameContains('android.view.ViewGroup').desc('返回按钮').exists()
     ) {
@@ -24,14 +28,14 @@ const backToTaskPage = () => {
         .desc('返回按钮')
         .findOne()
         .click()
-    } else if (idContains('com.jingdong.app.mall:id/fe').exists()) {
-      idContains('com.jingdong.app.mall:id/fe').findOne().click()
-    } else if (idContains('com.jingdong.app.mall:id/fd').exists()) {
-      idContains('com.jingdong.app.mall:id/fd').findOne().click()
-    } else if (idContains('fe').exists()) {
-      idContains('fe').findOne().click()
-    } else if (idContains('fd').exists()) {
-      idContains('fd').findOne().click()
+    } else if (id('com.jingdong.app.mall:id/fe').exists()) {
+      id('com.jingdong.app.mall:id/fe').findOne().click()
+    } else if (id('com.jingdong.app.mall:id/fd').exists()) {
+      id('com.jingdong.app.mall:id/fd').findOne().click()
+    } else if (id('fe').exists()) {
+      id('fe').findOne().click()
+    } else if (id('fd').exists()) {
+      id('fd').findOne().click()
     } else if (
       classNameContains('android.widget.FrameLayout')
         .boundsInside(800, 1000, device.width, device.height)
@@ -86,6 +90,10 @@ function MainTask(btnIndex, itemCount, interval, member) {
     if (this.next) {
       toast('一般任务')
       this.next = false
+      if (unfollow && id('q_').exists()) {
+        id('q_').findOne().click()
+        sleep(1000)
+      }
       backToTaskPage()
     }
   }
@@ -100,7 +108,7 @@ function MainTask(btnIndex, itemCount, interval, member) {
         this.itemCount = 0
         return backToTaskPage()
       }
-      idContains('jmdd-react-smash_' + this.itemCount)
+      id('jmdd-react-smash_' + this.itemCount)
         .findOne()
         .click()
       this.itemCount++
@@ -121,48 +129,15 @@ function MainTask(btnIndex, itemCount, interval, member) {
     }
   }
 
-  //种豆得豆
-  this.beanPage = () => {
-    const conditions = textContains('豆苗成长值').exists()
-    if (this.next && conditions) {
-      toast('种豆得豆')
-      this.next = false
-      backToTaskPage()
-    }
-  }
-
-  //东东农场
-  this.farmPage = () => {
-    const conditions = textContains('东东农场').exists()
-    if (this.next && conditions) {
-      toast('东东农场')
-      this.next = false
-      backToTaskPage()
-    }
-  }
-
-  //天天加速
-  this.speedPage = () => {
-    const conditions = textContains('天天加速').exists()
-    if (this.next && conditions) {
-      toast('天天加速')
-      this.next = false
-      backToTaskPage()
-    }
-  }
-
-  //小程序
-  this.miniPage = () => {
+  //京东金融
+  this.financePage = () => {
     const conditions =
-      textContains('首页').exists() ||
-      textContains('分类').exists() ||
-      textContains('推荐').exists() ||
-      textContains('购物车').exists() ||
-      textContains('我的').exists()
+      textContains('小金库').exists() && textContains('白条').exists()
     if (this.next && conditions) {
-      toast('小程序')
+      toast('京东金融')
       this.next = false
-      backToTaskPage()
+      back()
+      back()
     }
   }
 
@@ -178,6 +153,26 @@ function MainTask(btnIndex, itemCount, interval, member) {
         this.btnIndex++
         backToTaskPage()
       }
+    }
+  }
+
+  //需要back键返回的页面
+  this.backKeyPage = () => {
+    const conditions =
+      textContains('赚点点券').exists() ||
+      textContains('东东超市').exists() ||
+      (textContains('京喜财富岛').exists() && textContains('提现').exists()) ||
+      (textContains('头号京贴').exists() &&
+        textContains('推荐').exists() &&
+        textContains('热门').exists()) ||
+      (textContains('年货').exists() &&
+        textContains('推荐').exists() &&
+        textContains('视频').exists()) ||
+      (textContains('每日签到').exists() && textContains('剩余').exists())
+    if (this.next && conditions) {
+      toast('需要back键返回的页面')
+      this.next = false
+      back()
     }
   }
 
@@ -211,13 +206,12 @@ function MainTask(btnIndex, itemCount, interval, member) {
       }
       this.next = true
       sleep(this.interval)
+      this.financePage()
       this.memberPage()
-      this.beanPage()
+      this.backKeyPage()
       this.detadilsPage()
       this.cartTaskPage()
       this.taskListPage()
-      this.miniPage()
-      this.speedPage()
       this.normalPage()
     }
   }
