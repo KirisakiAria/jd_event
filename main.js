@@ -208,10 +208,10 @@ function MainTask(btnIndex, itemCount, interval, member) {
       sleep(this.interval)
       this.financePage()
       this.memberPage()
-      this.backKeyPage()
       this.detadilsPage()
       this.cartTaskPage()
       this.taskListPage()
+      this.backKeyPage()
       this.normalPage()
     }
   }
