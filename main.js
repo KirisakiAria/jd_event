@@ -90,8 +90,13 @@ function MainTask(btnIndex, itemCount, interval, member) {
     if (this.next) {
       toast('一般任务')
       this.next = false
-      if (unfollow && id('q_').exists()) {
-        id('q_').findOne().click()
+      if (unfollow) {
+        if (idContains('q_').exists()) {
+          idContains('q_').findOne().click()
+        }
+        if (idContains('qa').exists()) {
+          idContains('qa').findOne().click()
+        }
         sleep(1000)
       }
       backToTaskPage()
@@ -108,7 +113,7 @@ function MainTask(btnIndex, itemCount, interval, member) {
         this.itemCount = 0
         return backToTaskPage()
       }
-      id('jmdd-react-smash_' + this.itemCount)
+      idContains('jmdd-react-smash_' + this.itemCount)
         .findOne()
         .click()
       this.itemCount++
@@ -125,7 +130,7 @@ function MainTask(btnIndex, itemCount, interval, member) {
       toast('商品详情')
       this.next = false
       sleep(1000)
-      backToTaskPage()
+      back()
     }
   }
 
