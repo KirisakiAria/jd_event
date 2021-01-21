@@ -105,7 +105,7 @@ function MainTask(btnIndex, itemCount, interval, member) {
 
   //加购任务页
   this.cartTaskPage = () => {
-    const conditions = textContains('在当前页加购5个商品').exists()
+    const conditions = textContains('购物车加购5个商品').exists()
     if (this.next && conditions) {
       toast('加购任务')
       this.next = false
