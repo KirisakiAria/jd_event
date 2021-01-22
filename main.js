@@ -91,11 +91,8 @@ function MainTask(btnIndex, itemCount, interval, member) {
       toast('一般任务')
       this.next = false
       if (unfollow) {
-        if (idContains('q_').exists()) {
-          idContains('q_').findOne().click()
-        }
-        if (idContains('qa').exists()) {
-          idContains('qa').findOne().click()
+        if (idContains('com.jd.lib.jshop.feature:id/qa').exists()) {
+          idContains('com.jd.lib.jshop.feature:id/qa').findOne().click()
         }
         sleep(1000)
       }
