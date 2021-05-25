@@ -148,10 +148,7 @@ function Task(btnIndex, itemCount, interval, member) {
   //需要back键返回的页面
   this.needBackKeyPage = () => {
     sleep(1000)
-    if (
-      textStartsWith('逛精选活动得').exists() &&
-      textEndsWith('金币').exists()
-    ) {
+    if (textStartsWith('逛精').exists() && textEndsWith('金币').exists()) {
       return
     }
     const conditions =
