@@ -2,7 +2,6 @@ let btnIndex = 1 //将要点击按钮的序号，跳过一些无法完成的任�
 let itemCount = 0 //浏览、加购商品计数
 const interval = 2000 //任务执行间隔，手机性能差的设置大一些
 const member = false //设置是否加入会员。true为加入、false为跳过
-const unfollow = true //浏览店铺任务后自动取关店铺
 
 const backToTaskPage = () => {
   //如果在任务首页，不走返回逻辑
@@ -77,7 +76,7 @@ const backToTaskPage = () => {
   }
 }
 
-function MainTask(btnIndex, itemCount, interval, member) {
+function Task(btnIndex, itemCount, interval, member) {
   this.btnIndex = btnIndex
   this.itemCount = itemCount
   this.interval = interval
@@ -87,15 +86,13 @@ function MainTask(btnIndex, itemCount, interval, member) {
 
   //一般任务
   this.normalPage = () => {
-    if (this.next) {
+    if (
+      this.next &&
+      textStartsWith('获得').exists() &&
+      textEndsWith('金币').exists()
+    ) {
       toast('一般任务')
       this.next = false
-      if (unfollow) {
-        if (idContains('com.jd.lib.jshop.feature:id/qa').exists()) {
-          idContains('com.jd.lib.jshop.feature:id/qa').findOne().click()
-        }
-        sleep(1000)
-      }
       backToTaskPage()
     }
   }
@@ -110,20 +107,18 @@ function MainTask(btnIndex, itemCount, interval, member) {
         this.itemCount = 0
         return backToTaskPage()
       }
-      idContains('jmdd-react-smash_' + this.itemCount)
-        .findOne()
-        .click()
+      textContains('¥').find()[this.itemCount].parent().child(5).click()
       this.itemCount++
     }
   }
 
   //商品详情页面
   this.detadilsPage = () => {
-    const conditions =
+    const conditions1 =
       textContains('店铺').exists() && textContains('购物车').exists()
     const conditions2 =
       textContains('客服').exists() && textContains('购物车').exists()
-    if (this.next && (conditions || conditions2)) {
+    if (this.next && (conditions1 || conditions2)) {
       toast('商品详情')
       this.next = false
       sleep(1000)
@@ -131,46 +126,54 @@ function MainTask(btnIndex, itemCount, interval, member) {
     }
   }
 
-  //京东金融
-  this.financePage = () => {
-    const conditions =
-      textContains('小金库').exists() && textContains('白条').exists()
-    if (this.next && conditions) {
-      toast('京东金融')
-      this.next = false
-      back()
-      back()
-    }
-  }
-
   //会员任务
   this.memberPage = () => {
-    const conditions = textContains('会员卡详情').exists()
+    const conditions = textContains('品牌会员联合开卡').exists()
     if (this.next && conditions) {
       toast('会员任务')
       this.next = false
       if (this.member) {
-        text('确认授权并加入店铺会员').findOne().parent().click()
+        if (textContains('恭喜您已集齐所有会员卡').exists()) {
+          back()
+        }
+        textContains('确认授权并加入店铺会员').findOne().click()
       } else {
+        toast('跳过所有会员任务')
         this.btnIndex++
-        backToTaskPage()
+        back()
       }
     }
   }
 
   //需要back键返回的页面
-  this.backKeyPage = () => {
+  this.needBackKeyPage = () => {
+    sleep(1000)
+    if (
+      textStartsWith('逛精选活动得').exists() &&
+      textEndsWith('金币').exists()
+    ) {
+      return
+    }
     const conditions =
-      textContains('赚点点券').exists() ||
-      textContains('东东超市').exists() ||
-      (textContains('京喜财富岛').exists() && textContains('提现').exists()) ||
-      (textContains('头号京贴').exists() &&
-        textContains('推荐').exists() &&
-        textContains('热门').exists()) ||
-      (textContains('年货').exists() &&
-        textContains('推荐').exists() &&
-        textContains('视频').exists()) ||
-      (textContains('每日签到').exists() && textContains('剩余').exists())
+      ((textContains('旗舰店').exists() ||
+        textContains('专营店').exists() ||
+        textContains('专卖店').exists()) &&
+        textContains('人关注').exists() &&
+        textContains('商品').exists() &&
+        textContains('分类').exists()) ||
+      textContains('东东农场').exists() ||
+      textContains('领京豆').exists() ||
+      textContains('京东618运动户外').exists() ||
+      textContains('京东超级盒子').exists() ||
+      textContains('京享值PK').exists() ||
+      descContains('品牌嘉年华').exists() ||
+      descContains('京东服饰').exists() ||
+      descContains('京东美妆').exists() ||
+      textContains('PLUS生活特权').exists() ||
+      textContains('陪伴计划').exists() ||
+      textContains('京东校园').exists() ||
+      textContains('京东电脑').exists() ||
+      textContains('家装建材馆').exists()
     if (this.next && conditions) {
       toast('需要back键返回的页面')
       this.next = false
@@ -188,7 +191,7 @@ function MainTask(btnIndex, itemCount, interval, member) {
       }
       if (textContains('去完成').exists()) {
         const result = click('去完成', this.btnIndex)
-        sleep(14000)
+        sleep(1000)
         if (!result) {
           toast('已经完成所有任务')
           this.switch = false
@@ -200,7 +203,7 @@ function MainTask(btnIndex, itemCount, interval, member) {
 
   //返回任务列表
   this.start = () => {
-    toast('开始执行一般任务，请打开任务列表')
+    toast('脚本运行中，请打开任务列表')
     for (;;) {
       if (!this.switch) {
         toast('停止一般任务')
@@ -208,13 +211,12 @@ function MainTask(btnIndex, itemCount, interval, member) {
       }
       this.next = true
       sleep(this.interval)
-      this.financePage()
-      this.memberPage()
       this.detadilsPage()
       this.cartTaskPage()
       this.taskListPage()
-      this.backKeyPage()
       this.normalPage()
+      this.needBackKeyPage()
+      this.memberPage()
     }
   }
 
@@ -223,11 +225,11 @@ function MainTask(btnIndex, itemCount, interval, member) {
   }
 }
 
-const stall = new MainTask(btnIndex, itemCount, interval, member)
+const task = new Task(btnIndex, itemCount, interval, member)
 
-const stallBtn = floaty.window(
+const taskBtn = floaty.window(
   <horizontal>
-    <button id="stall" text="重新开始任务" />
+    <button id="task" text="重新开始任务" />
   </horizontal>
 )
 
@@ -237,27 +239,27 @@ const stopBtn = floaty.window(
   </horizontal>
 )
 
-stallBtn.setPosition(150, 0)
+taskBtn.setPosition(150, 0)
 stopBtn.setPosition(150, 150)
 
-stallBtn.stall.click(() => {
+taskBtn.task.click(() => {
   threads.shutDownAll()
   threads.start(function () {
     toast('重新执行一般任务')
-    stall.stop()
-    stall.switch = true
-    stall.start()
+    task.stop()
+    task.switch = true
+    task.start()
   })
 })
 
 stopBtn.stop.click(() => {
   toast('停止所有任务')
   threads.shutDownAll()
-  stall.switch = false
+  task.switch = false
 })
 
 threads.start(function () {
-  stall.start()
+  task.start()
 })
 
 setInterval(() => {}, 500)
