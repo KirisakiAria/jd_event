@@ -84,14 +84,14 @@ function Task(btnIndex, itemCount, interval, member) {
   this.next = true
   this.switch = true
 
-  //一般任务
-  this.normalPage = () => {
+  //等待8秒任务
+  this.waitingPage = () => {
     if (
       this.next &&
       textStartsWith('获得').exists() &&
       textEndsWith('金币').exists()
     ) {
-      toast('一般任务')
+      toast('等待8秒任务')
       this.next = false
       backToTaskPage()
     }
@@ -145,34 +145,13 @@ function Task(btnIndex, itemCount, interval, member) {
     }
   }
 
-  //需要back键返回的页面
-  this.needBackKeyPage = () => {
-    sleep(1000)
+  //可以直接返回的任务
+  this.backPage = () => {
+    sleep(5000)
     if (textStartsWith('逛精').exists() && textEndsWith('金币').exists()) {
       return
-    }
-    const conditions =
-      ((textContains('旗舰店').exists() ||
-        textContains('专营店').exists() ||
-        textContains('专卖店').exists()) &&
-        textContains('人关注').exists() &&
-        textContains('商品').exists() &&
-        textContains('分类').exists()) ||
-      textContains('东东农场').exists() ||
-      textContains('领京豆').exists() ||
-      textContains('京东618运动户外').exists() ||
-      textContains('京东超级盒子').exists() ||
-      textContains('京享值PK').exists() ||
-      descContains('品牌嘉年华').exists() ||
-      descContains('京东服饰').exists() ||
-      descContains('京东美妆').exists() ||
-      textContains('PLUS生活特权').exists() ||
-      textContains('陪伴计划').exists() ||
-      textContains('京东校园').exists() ||
-      textContains('京东电脑').exists() ||
-      textContains('家装建材馆').exists()
-    if (this.next && conditions) {
-      toast('需要back键返回的页面')
+    } else if (this.next) {
+      toast('可以直接返回的任务')
       this.next = false
       back()
     }
@@ -211,8 +190,8 @@ function Task(btnIndex, itemCount, interval, member) {
       this.detadilsPage()
       this.cartTaskPage()
       this.taskListPage()
-      this.normalPage()
-      this.needBackKeyPage()
+      this.waitingPage()
+      this.backPage()
       this.memberPage()
     }
   }
