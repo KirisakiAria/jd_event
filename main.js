@@ -243,7 +243,7 @@ const nextBtn = floaty.window(
 nextBtn.setPosition(150, 300)
 nextBtn.stop.click(() => {
   task.btnIndex++
-  toast('成过跳过一个任务')
+  toast('成过跳过任务，当前任务序列' + btnIndex)
 })
 
 threads.start(function () {
