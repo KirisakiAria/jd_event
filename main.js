@@ -234,6 +234,17 @@ stopBtn.stop.click(() => {
   task.switch = false
 })
 
+//by 坛友mouse040429
+const nextBtn = floaty.window(
+  <horizontal>
+    <button id="stop" text="下一个任务" />
+  </horizontal>
+)
+nextBtn.setPosition(150, 300)
+nextBtn.stop.click(() => {
+  task.btnIndex++
+})
+
 threads.start(function () {
   task.start()
 })
