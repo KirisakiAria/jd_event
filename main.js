@@ -237,12 +237,13 @@ stopBtn.stop.click(() => {
 //by 坛友mouse040429
 const nextBtn = floaty.window(
   <horizontal>
-    <button id="stop" text="下一个任务" />
+    <button id="stop" text="跳过任务" />
   </horizontal>
 )
 nextBtn.setPosition(150, 300)
 nextBtn.stop.click(() => {
   task.btnIndex++
+  toast('成过跳过一个任务')
 })
 
 threads.start(function () {
