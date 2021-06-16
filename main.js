@@ -153,7 +153,7 @@ function Task(btnIndex, itemCount, interval, member) {
     } else if (this.next) {
       toast('可以直接返回的任务')
       this.next = false
-      backToTaskPage()
+      back()
     }
   }
 
